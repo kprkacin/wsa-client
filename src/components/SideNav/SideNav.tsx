@@ -2,14 +2,19 @@ import React, { useState } from 'react';
 import { Box, Group, Navbar, Stack, Transition } from '@mantine/core';
 import { ThemeToggle } from '../ThemeToggle';
 import NavLink from '../NavLink';
-import { IconAbacus, IconArrowBack, IconChess } from '@tabler/icons';
+import {
+  IconAbacus,
+  IconArrowBack,
+  IconChess,
+  IconGoGame,
+} from '@tabler/icons';
 
 const SideNav: React.FC = () => {
   const [show, setShow] = useState(false);
   return (
     <Navbar
       width={{
-        base: show ? 300 : 50,
+        base: show ? 300 : 75,
       }}
       height="100vh"
       p="xs"
@@ -27,11 +32,7 @@ const SideNav: React.FC = () => {
           label={show ? 'First Route' : ''}
         />
 
-        <NavLink
-          to="/unknown2"
-          icon={<IconAbacus />}
-          label={show ? 'Second Route' : ''}
-        />
+        <NavLink to="/game" icon={<IconGoGame />} label={show ? 'Game' : ''} />
 
         <NavLink
           to="/unknown3"

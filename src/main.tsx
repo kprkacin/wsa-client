@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider, Route } from 'react-router-dom';
 import App from './App';
 import { ErrorPage, NavLink } from './components';
 import './index.css';
+import { GamePage } from './pages';
 
 const router = createBrowserRouter([
   {
@@ -14,6 +15,12 @@ const router = createBrowserRouter([
       {
         path: '/unknown',
         element: <NavLink to="/" label="label" />,
+
+        errorElement: <ErrorPage />,
+      },
+      {
+        path: '/game',
+        element: <GamePage />,
 
         errorElement: <ErrorPage />,
       },
