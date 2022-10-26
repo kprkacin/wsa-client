@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider, Route } from 'react-router-dom';
 import App from './App';
 import { ErrorPage, NavLink } from './components';
+import RotateBox from './components/RotateBox';
 import './index.css';
 import { GamePage } from './pages';
 
@@ -14,7 +15,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/unknown',
-        element: <NavLink to="/" label="label" />,
+        element: <RotateBox />,
 
         errorElement: <ErrorPage />,
       },
