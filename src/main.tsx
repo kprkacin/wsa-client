@@ -1,35 +1,14 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { createBrowserRouter, RouterProvider, Route } from 'react-router-dom';
-import App from './App';
-import { ErrorPage, NavLink } from './components';
-import RotateBox from './components/RotateBox';
-import './index.css';
-import { GamePage } from './pages';
+import { Toaster } from 'react-hot-toast';
+import { BrowserRouter } from 'react-router-dom';
+import Layout from './components/Router/RouterLayout';
 
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <App />,
-    errorElement: <ErrorPage />,
-    children: [
-      {
-        path: '/unknown',
-        element: <RotateBox />,
-
-        errorElement: <ErrorPage />,
-      },
-      {
-        path: '/game',
-        element: <GamePage />,
-
-        errorElement: <ErrorPage />,
-      },
-    ],
-  },
-]);
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <BrowserRouter>
+      <Toaster position="top-right" />
+      <Layout />
+    </BrowserRouter>
   </React.StrictMode>,
 );
