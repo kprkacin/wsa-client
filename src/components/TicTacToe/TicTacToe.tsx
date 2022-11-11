@@ -7,12 +7,14 @@ import { replacePropertyInArray } from '../../services/helpers';
 
 import io from 'socket.io-client';
 import RotateBox from '../RotateBox';
-const socket = io('http://localhost:7500', {
-  withCredentials: true,
-  extraHeaders: {
-    'my-custom-header': 'abcd',
-  },
-});
+import { useSocket } from '../../services/socket/SocketProvider';
+
+// const socket = io('http://localhost:7500', {
+//   withCredentials: true,
+//   extraHeaders: {
+//     'my-custom-header': 'abcd',
+//   },
+// });
 
 type Props = {
   //
@@ -26,6 +28,9 @@ const TicTacToe: React.FC = (props: Props) => {
   const [playerState, setPlayerState] = useState<PlayerStates>(
     PlayerStates.ACTIVE,
   );
+
+  const { socket } = useSocket();
+  console.log('what');
 
   console.log(activeSymbol);
 
@@ -53,6 +58,7 @@ const TicTacToe: React.FC = (props: Props) => {
 
       console.log(data);
       setActiveTurn(false);
+      setPlayerState(PlayerStates.ACTIVE);
       setResult(SquareSymbol[winner]);
     });
 
@@ -83,8 +89,14 @@ const TicTacToe: React.FC = (props: Props) => {
   };
 
   const handleQueClicked = () => {
-    socket.emit('queue', playerState);
-    setPlayerState(PlayerStates.QUEUED);
+    setSquares(Array(9).fill({}));
+    const state =
+      playerState === PlayerStates.ACTIVE
+        ? PlayerStates.QUEUED
+        : PlayerStates.ACTIVE;
+    socket.emit('queuing', state);
+    setPlayerState(state);
+    setResult(null);
   };
   return (
     <>
@@ -98,7 +110,7 @@ const TicTacToe: React.FC = (props: Props) => {
           : 'OPPONENTS TURN'}
       </h1>
       <h2>{playerState}</h2>
-      <button>Que</button>
+      <button onClick={handleQueClicked}>Que</button>
       <Grid
         sx={(theme) => ({
           width: '50%',

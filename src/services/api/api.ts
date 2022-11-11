@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios';
-import { toast } from 'react-hot-toast';
+import { showNotification } from '@mantine/notifications';
 import { ToastSettings } from './types';
+
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   timeout: 10000,
@@ -19,14 +20,15 @@ export const createApiCall =
     try {
       const data = await api(config);
       if (success) {
-        toast.success(success);
+        showNotification({ message: success, color: 'teal' });
       }
 
       return data;
     } catch (e: any) {
-      error
-        ? toast.error(error)
-        : toast.error(e?.response?.data?.title || e?.response?.data?.message);
+      showNotification({
+        message: error || 'Error. Please try again',
+        color: 'red',
+      });
 
       throw e;
     }

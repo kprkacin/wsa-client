@@ -2,18 +2,20 @@ import React from 'react';
 import { AppShell, Navbar, Header } from '@mantine/core';
 import SideNav from '../SideNav';
 import { Outlet } from 'react-router-dom';
+import { useAuth } from '../../services/auth/AuthProvider';
 
 const Shell: React.FC = () => {
+  const { user } = useAuth();
+
+  console.log(user);
+
   return (
     <AppShell
       padding="md"
-      aside={<SideNav />}
+      aside={user.id ? <SideNav /> : undefined}
       styles={(theme) => ({
         main: {
-          backgroundColor:
-            theme.colorScheme === 'dark'
-              ? theme.colors.dark[8]
-              : theme.colors.gray[0],
+          backgroundColor: theme.colors.gray[2],
         },
       })}
     >

@@ -6,7 +6,9 @@ import {
   ColorSchemeProvider,
   MantineProvider,
 } from '@mantine/core';
-import { Shell } from './components';
+import { NotificationsProvider } from '@mantine/notifications';
+
+import { CustomFonts, Shell } from './components';
 
 export const App = () => {
   const [colorScheme, setColorScheme] = useState<ColorScheme>('light');
@@ -19,11 +21,27 @@ export const App = () => {
       toggleColorScheme={toggleColorScheme}
     >
       <MantineProvider
-        theme={{ colorScheme }}
+        theme={{
+          fontFamily: 'Dosis, sans-serif',
+          headings: {
+            fontFamily: 'Dosis, sans-serif',
+          },
+          colorScheme,
+          colors: {
+            secondary: ['#ea638c'],
+            primary: ['#e64980'],
+            'light-dark': ['#190e4f'],
+            dark: ['#03012c'],
+            light: ['#f7f0f0'],
+          },
+        }}
         withGlobalStyles
         withNormalizeCSS
       >
-        <Shell />
+        <NotificationsProvider>
+          <CustomFonts />
+          <Shell />
+        </NotificationsProvider>
       </MantineProvider>
     </ColorSchemeProvider>
   );

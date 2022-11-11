@@ -1,7 +1,20 @@
 import React, { ReactElement } from 'react';
-import { Box, Group, Navbar, NavLink as MNavLink } from '@mantine/core';
+import {
+  Box,
+  createStyles,
+  Group,
+  Navbar,
+  NavLink as MNavLink,
+} from '@mantine/core';
 import { ThemeToggle } from '../ThemeToggle';
 import { Link, useLocation } from 'react-router-dom';
+const useStyles = (label?: string) =>
+  createStyles((theme) => ({
+    body: {
+      display: label ? 'flex' : 'none',
+    },
+  }));
+
 type Props = {
   to: string;
   icon?: ReactElement;
@@ -11,6 +24,7 @@ type Props = {
 const NavLink: React.FC<Props> = (props) => {
   const { to, icon, label } = props;
   const location = useLocation();
+  const { classes } = useStyles(label)();
 
   return (
     <MNavLink
@@ -22,6 +36,11 @@ const NavLink: React.FC<Props> = (props) => {
       sx={{
         overflow: 'hidden',
         whiteSpace: 'nowrap',
+        padding: 0,
+        alignItems: 'center',
+      }}
+      classNames={{
+        body: classes.body,
       }}
     />
   );

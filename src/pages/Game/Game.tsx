@@ -5,8 +5,8 @@ type Props = {
   //
 };
 
-const GamePage: React.FC = (props: Props) => {
+const Game: React.FC = (props: Props) => {
   return <TicTacToe />;
 };
 
-export default GamePage;
+export default Game;

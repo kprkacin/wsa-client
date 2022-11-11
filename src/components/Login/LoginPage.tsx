@@ -1,41 +1,136 @@
+/* eslint-disable no-case-declarations */
+import { useState } from 'react';
+import { Box, Button, createStyles } from '@mantine/core';
 import React from 'react';
+import { Drawer } from '@mantine/core';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { loginUser } from '../../services/auth/api';
+import { signIn, signUp } from '../../services/auth/api';
 import { useAuth } from '../../services/auth/AuthProvider';
+import { AuthActionTypes, StringKVPair } from '../../services/auth/types';
+import { initialLoginForm } from '../../services/auth/consts';
+import AuthForm from './AuthForm';
+import { validateLoginForm } from '../../services/auth/helpers';
+
+const useStyles = createStyles((theme) => ({
+  drawer: {
+    //  backgroundColor: '#190e4f',
+    backgroundColor: 'rgba( 247, 240, 240, 0.2 )',
+    boxShadow: '0 8px 32px 0 rgba( 31, 38, 135, 0.37 )',
+    backdropFilter: 'blur( 5.5px )',
+    border: '1px solid rgba( 255, 255, 255, 0.18 )',
+    opacity: 0.1,
+  },
+  root: {
+    textAlign: 'start',
+  },
+}));
 
 const LoginPage: React.FC = () => {
+  const [authType, setAuthType] = useState<AuthActionTypes | null>(null);
+  const [loginForm, setLoginForm] = useState(initialLoginForm);
+  const [error, setError] = useState<StringKVPair>({});
+
   const navigate = useNavigate();
   const location = useLocation();
   const { logIn } = useAuth();
 
   const from = location.state?.from?.pathname || '/';
 
-  const handleLoginClicked = async (
-    event: React.FormEvent<HTMLFormElement>,
-  ) => {
-    event.preventDefault();
+  const { classes } = useStyles();
 
+  const handleLoginClicked = async () => {
+    const errors = validateLoginForm(loginForm, authType!);
+    console.log(errors);
+    if (Object.values(errors).some((e) => e.length > 0)) {
+      console.log(Object.values(errors));
+      setError(errors);
+      return;
+    }
     try {
-      const user = await loginUser('guest');
-      logIn(user, () => navigate(from));
+      switch (authType) {
+        case AuthActionTypes.SIGN_IN:
+          const userSignIn = await signIn(loginForm);
+          logIn(userSignIn, () => navigate(from));
+          break;
+        default:
+          const user = await signUp(loginForm);
+          logIn(user, () => navigate(from));
+          break;
+      }
     } catch (error) {
       // ignore
     }
   };
 
-  console.log('env', import.meta.env.VITE_API_URL);
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setError({});
+    setLoginForm({ ...loginForm, [e.target.name]: e.target.value });
+  };
 
   return (
-    <div>
-      <p>You must log in to view the page at {from}</p>
+    <Box className="login">
+      <Drawer
+        opened={!!authType}
+        onClose={() => setAuthType(null)}
+        padding="xl"
+        size="100%"
+        position="top"
+        classNames={{
+          drawer: classes.drawer,
+        }}
+      >
+        <AuthForm
+          authType={authType || AuthActionTypes.AS_GUEST}
+          form={loginForm}
+          errors={error}
+          handleChange={handleFormChange}
+          handleAction={handleLoginClicked}
+        />
+      </Drawer>
+      <Button
+        variant="light"
+        color="violet"
+        size="xl"
+        uppercase
+        onClick={() => {
+          setAuthType(AuthActionTypes.AS_GUEST);
+        }}
+      >
+        Play as Guest
+      </Button>
+      <Button
+        variant="light"
+        color="violet"
+        size="xl"
+        uppercase
+        onClick={() => {
+          setAuthType(AuthActionTypes.SIGN_UP);
+        }}
+      >
+        Sign Up
+      </Button>
+      <Button
+        variant="light"
+        color="violet"
+        size="xl"
+        uppercase
+        onClick={() => {
+          setAuthType(AuthActionTypes.SIGN_IN);
+        }}
+      >
+        Sign In
+      </Button>
 
-      <form onSubmit={handleLoginClicked}>
-        <label>
-          Username: <input name="username" type="text" />
-        </label>{' '}
-        <button type="submit">Login</button>
-      </form>
-    </div>
+      {Array(250)
+        .fill(0)
+        .map((_, index) => {
+          return (
+            <div className="circle-container" key={index}>
+              <div className="circle" />
+            </div>
+          );
+        })}
+    </Box>
   );
 };
 export default LoginPage;

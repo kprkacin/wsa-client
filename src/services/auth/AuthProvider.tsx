@@ -1,15 +1,21 @@
 import React, { useCallback, useContext, useState } from 'react';
 import { initialUser, User } from '../users';
+import { clearAccessToken, setAccessToken } from './helpers';
 import { AuthProviderProps } from './types';
 
-export const AuthProviderContext = React.createContext<{
+interface AuthContext {
   user: User;
   logIn: (user: User, callback: () => void) => void;
   logOut: (callback: () => void) => void;
-}>({
+  setActiveUser: React.Dispatch<React.SetStateAction<User>>;
+}
+export const AuthProviderContext = React.createContext<AuthContext>({
   user: initialUser,
   logIn: (user: User) => undefined,
   logOut: () => undefined,
+  setActiveUser: (user: User | ((prevState: User) => User)) => {
+    //
+  },
 });
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
@@ -17,11 +23,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logIn = useCallback((user: User, callback: () => void) => {
     setActiveUser(user);
+    if (user.token) {
+      setAccessToken(user.token);
+    }
     callback();
   }, []);
 
   const logOut = useCallback((callback: () => void) => {
     setActiveUser(initialUser);
+    clearAccessToken();
     callback();
   }, []);
 
@@ -31,6 +41,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         user: activeUser,
         logIn,
         logOut,
+        setActiveUser,
       }}
     >
       {children}
