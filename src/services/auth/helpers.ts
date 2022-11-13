@@ -25,8 +25,8 @@ export const validateLoginForm = (
 
   switch (authType) {
     case AuthActionTypes.SIGN_UP:
-      errors['username'] =
-        loginForm.username.length < 3
+      errors['name'] =
+        loginForm.name.length < 3
           ? 'Username must be at least 3 characters long'
           : '';
       errors['password'] =
@@ -41,8 +41,8 @@ export const validateLoginForm = (
       break;
 
     default:
-      errors['username'] =
-        loginForm.username.length < 3
+      errors['name'] =
+        loginForm.name.length < 3
           ? 'Username must be at least 3 characters long'
           : '';
       break;

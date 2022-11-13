@@ -27,7 +27,7 @@ const SideNav: React.FC = () => {
       p="xs"
       sx={(theme) => ({
         overflow: 'hidden',
-        transition: 'width 1000ms ease',
+        transition: 'width 500ms ease',
         backgroundColor: theme.colors.gray[0],
         border: 0,
         '&:hover': {

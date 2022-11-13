@@ -38,7 +38,7 @@ export const App = () => {
         withGlobalStyles
         withNormalizeCSS
       >
-        <NotificationsProvider>
+        <NotificationsProvider position="top-right">
           <CustomFonts />
           <Shell />
         </NotificationsProvider>

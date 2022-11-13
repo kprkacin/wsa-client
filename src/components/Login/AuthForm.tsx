@@ -44,39 +44,39 @@ const AuthForm: React.FC<Props> = (props) => {
         <TextInput
           label="Name"
           required
-          value={form.username}
-          name="username"
+          value={form.name}
+          name="name"
           placeholder="Enter your name"
           onChange={handleChange}
-          error={errors.username}
+          error={errors.name}
           p={8}
         />
       )}
-      {authType === AuthActionTypes.SIGN_UP ||
-        (authType === AuthActionTypes.SIGN_IN && (
-          <>
-            <TextInput
-              label="Email"
-              required
-              value={form.email}
-              name="email"
-              placeholder="Enter your email"
-              icon={<IconAt />}
-              onChange={handleChange}
-              error={errors.email}
-              p={8}
-            />
-            <PasswordInput
-              name="password"
-              value={form.password}
-              placeholder="Enter your Password"
-              label="Password"
-              onChange={handleChange}
-              error={errors.password}
-              p={8}
-            />
-          </>
-        ))}
+      {(authType === AuthActionTypes.SIGN_UP ||
+        authType === AuthActionTypes.SIGN_IN) && (
+        <>
+          <TextInput
+            label="Email"
+            required
+            value={form.email}
+            name="email"
+            placeholder="Enter your email"
+            icon={<IconAt />}
+            onChange={handleChange}
+            error={errors.email}
+            p={8}
+          />
+          <PasswordInput
+            name="password"
+            value={form.password}
+            placeholder="Enter your Password"
+            label="Password"
+            onChange={handleChange}
+            error={errors.password}
+            p={8}
+          />
+        </>
+      )}
       <Box
         sx={() => ({
           display: 'flex',

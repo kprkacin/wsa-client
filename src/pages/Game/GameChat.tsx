@@ -2,7 +2,6 @@ import { Button, createStyles, Paper, Text, Title } from '@mantine/core';
 import React, { useEffect, useState } from 'react';
 import { TicTacToe } from '../../components';
 import { Avatar } from '../../components/Avatar';
-import { ChatMessage } from '../../components/Chat';
 import { TextInput } from '../../components/Input';
 import { useAuth } from '../../services/auth/AuthProvider';
 import { useSocket } from '../../services/socket/SocketProvider';
@@ -21,7 +20,7 @@ type Props = {
   //
 };
 
-const Chat: React.FC = (props: Props) => {
+const GameChat: React.FC = (props: Props) => {
   const [message, setMessage] = useState<string>('');
   const [messages, setMessages] = useState<any[]>([]);
   const { classes } = useStyles();
@@ -29,26 +28,33 @@ const Chat: React.FC = (props: Props) => {
   const { user } = useAuth();
 
   useEffect(() => {
-    socket.on('lobby.message.received', (data) => {
+    socket.on('game.message.received', (data) => {
       setMessages((prev) => [...prev, data]);
     });
 
     return () => {
-      socket.off('lobby.message.received');
+      socket.off('game.message.received');
     };
   }, []);
 
   const sendMessage = () => {
-    socket.emit('lobby.message.send', { message, id: user.id });
+    socket.emit('game.message.send', { message, id: user.id });
     setMessages((prev) => [...prev, { data: { message, id: user.id } }]);
   };
 
   console.log(messages);
   return (
     <Paper shadow="xs" radius="xl" p="md" className={classes.main}>
-      <Title>Lobby</Title>
-      {messages.map(({ data }, idx) => (
-        <ChatMessage key={idx} message={data.message} id={data.id} />
+      <Title>Chat</Title>
+      {messages.map(({ data }) => (
+        <Paper className={classes.main} key={'e'}>
+          <Avatar color={'cyan'} size={'lg'}>
+            {data?.id}
+          </Avatar>
+          <Text ml={20} color="black">
+            {data?.message}
+          </Text>
+        </Paper>
       ))}
 
       <TextInput onChange={(e) => setMessage(e.target.value)} />
@@ -57,7 +63,7 @@ const Chat: React.FC = (props: Props) => {
   );
 };
 
-export default Chat;
+export default GameChat;
 
 {
   /* 

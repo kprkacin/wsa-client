@@ -20,23 +20,6 @@ const Dashboard: React.FC = (props: Props) => {
 
   const { classes } = useStyles();
 
-  const ths = (
-    <tr>
-      <th>Rank</th>
-      <th>Name</th>
-      <th>Wins</th>
-      <th>Losses</th>
-    </tr>
-  );
-
-  const rows = [...Array(50)].map((element, index) => (
-    <tr key={index}>
-      <td>{index + 1}</td>
-      <td>{Math.random().toString(32).slice(2)}</td>
-      <td>{Math.ceil(Math.random() * 100)}</td>
-      <td>{Math.ceil(Math.random() * 100)}</td>
-    </tr>
-  ));
   return (
     <>
       <Text>Welcome Dashboard {user.name} </Text>
@@ -47,7 +30,6 @@ const Dashboard: React.FC = (props: Props) => {
       >
         <Chat />
       </Box>
-      <Leaderboard />
     </>
   );
 };

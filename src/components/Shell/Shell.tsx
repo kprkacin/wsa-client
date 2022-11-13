@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppShell, Navbar, Header } from '@mantine/core';
+import { AppShell, Navbar, Header, BackgroundImage } from '@mantine/core';
 import SideNav from '../SideNav';
 import { Outlet } from 'react-router-dom';
 import { useAuth } from '../../services/auth/AuthProvider';

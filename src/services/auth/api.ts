@@ -1,5 +1,5 @@
 import { createApiCall } from '../api/api';
-import { transformUser, User } from '../users';
+import { transformToAuthRequest, transformUser, User } from '../users';
 import { LoginForm } from './types';
 
 export const signUp = async (form: LoginForm) => {
@@ -7,7 +7,7 @@ export const signUp = async (form: LoginForm) => {
     {
       url: '/auth/register',
       method: 'POST',
-      data: { name: form.username, password: form.password, email: form.email },
+      data: transformToAuthRequest(form),
     },
     {
       success: 'Logged in successfully',
@@ -21,7 +21,7 @@ export const signIn = async (form: LoginForm) => {
     {
       url: '/auth/login',
       method: 'POST',
-      data: { name: form.username, password: form.password, email: form.email },
+      data: transformToAuthRequest(form),
     },
     {
       success: 'Logged in successfully',

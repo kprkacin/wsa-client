@@ -8,9 +8,12 @@ import {
   Title,
   Text,
 } from '@mantine/core';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Avatar } from '../../components/Avatar';
+import { LastPlayedRow, LeaderboardRow } from '../../components/Table';
 import { useAuth } from '../../services/auth/AuthProvider';
+import { getRanks, Rank } from '../../services/ranks';
+import { getResults, getResultsByUserId, Result } from '../../services/results';
 import CardAvatar from './CardAvatar';
 
 const useStyles = createStyles((theme) => ({
@@ -64,13 +67,26 @@ const useStyles = createStyles((theme) => ({
 }));
 
 type Props = {
-  //
+  limit?: number;
 };
 
-const Leaderboard: React.FC = (props: Props) => {
-  const { user } = useAuth();
+const Leaderboard: React.FC<Props> = (props: Props) => {
+  const { limit } = props;
+
+  const [ranks, setRanks] = useState<Rank[]>([]);
 
   const { classes } = useStyles();
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const ranksData = await getRanks();
+        setRanks(ranksData);
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  }, []);
 
   const ths = (
     <tr>
@@ -81,26 +97,18 @@ const Leaderboard: React.FC = (props: Props) => {
     </tr>
   );
 
-  const rows = [...Array(50)].map((element, index) => (
+  const rows = ranks.slice(3).map((element, index) => (
     <tr key={index}>
-      <td>{index + 1}</td>
-      <td>
-        <Group>
-          <Avatar>{Math.random().toString(32).slice(2)[0]}</Avatar>
-          {Math.random().toString(32).slice(2)}
-        </Group>
-      </td>
-      <td>{Math.ceil(Math.random() * 100)}</td>
-      <td>{Math.ceil(Math.random() * 100)}</td>
+      <LeaderboardRow rank={element} index={index + 3} />
     </tr>
   ));
   return (
     <>
       <Group className={classes.group}>
-        <Group>
-          <CardAvatar />
-          <CardAvatar />
-          <CardAvatar />
+        <Group style={{ minWidth: '60%' }}>
+          <CardAvatar rank={ranks[0]} index={0} />
+          <CardAvatar rank={ranks[1]} index={1} />
+          <CardAvatar rank={ranks[2]} index={2} />
         </Group>
         <Stack className={classes.stack}>
           <Title>Your Stats</Title>

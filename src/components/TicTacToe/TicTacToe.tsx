@@ -8,13 +8,7 @@ import { replacePropertyInArray } from '../../services/helpers';
 import io from 'socket.io-client';
 import RotateBox from '../RotateBox';
 import { useSocket } from '../../services/socket/SocketProvider';
-
-// const socket = io('http://localhost:7500', {
-//   withCredentials: true,
-//   extraHeaders: {
-//     'my-custom-header': 'abcd',
-//   },
-// });
+import { hideNotification, showNotification } from '@mantine/notifications';
 
 type Props = {
   //
@@ -44,6 +38,14 @@ const TicTacToe: React.FC = (props: Props) => {
       const { symbol, turn }: { symbol: SquareSymbol; turn: boolean } = data;
       setActiveSymbol(SquareSymbol[symbol]);
       setActiveTurn(turn);
+      setPlayerState(PlayerStates.IN_GAME);
+      hideNotification('queuing');
+      showNotification({
+        id: 'queuing',
+        message: 'Match found! Connecting...',
+        color: 'teal',
+        title: 'Connecting',
+      });
     });
 
     socket.on('move.made', (data: any) => {
@@ -97,7 +99,19 @@ const TicTacToe: React.FC = (props: Props) => {
     socket.emit('queuing', state);
     setPlayerState(state);
     setResult(null);
+    showNotification({
+      id: 'queuing',
+      message: 'Finding opponent...',
+      autoClose: false,
+      title: 'In Queue',
+      loading: true,
+      onClose: () => {
+        setPlayerState(PlayerStates.ACTIVE);
+        socket.emit('queuing', PlayerStates.ACTIVE);
+      },
+    });
   };
+
   return (
     <>
       <h1>

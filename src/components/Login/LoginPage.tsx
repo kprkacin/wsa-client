@@ -52,6 +52,10 @@ const LoginPage: React.FC = () => {
           const userSignIn = await signIn(loginForm);
           logIn(userSignIn, () => navigate(from));
           break;
+        case AuthActionTypes.AS_GUEST:
+          const userSignUpGuest = await signUp(loginForm);
+          logIn(userSignUpGuest, () => navigate(from));
+          break;
         default:
           const user = await signUp(loginForm);
           logIn(user, () => navigate(from));

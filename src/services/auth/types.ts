@@ -3,7 +3,7 @@ export interface AuthProviderProps {
 }
 
 export interface LoginForm {
-  username: string;
+  name: string;
   password: string;
   email: string;
 }

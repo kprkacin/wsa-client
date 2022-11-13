@@ -22,6 +22,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [activeUser, setActiveUser] = useState<User>(initialUser);
 
   const logIn = useCallback((user: User, callback: () => void) => {
+    console.log('logging');
     setActiveUser(user);
     if (user.token) {
       setAccessToken(user.token);

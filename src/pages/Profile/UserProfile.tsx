@@ -10,6 +10,7 @@ import {
 } from '@mantine/core';
 import { IconAt } from '@tabler/icons';
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { Avatar } from '../../components/Avatar';
 import { PasswordInput, TextInput } from '../../components/Input';
 import { ReplayModal } from '../../components/Replay';
@@ -18,6 +19,9 @@ import { useAuth } from '../../services/auth/AuthProvider';
 import { getRankByUserId, Rank } from '../../services/ranks';
 import { initialRank } from '../../services/ranks/consts';
 import { getResultsByUserId, Result } from '../../services/results';
+import { initialUser, User } from '../../services/users';
+import { getUserById } from '../../services/users/api';
+import { useUserMiddleware } from '../../services/users/useUserMiddleware';
 import { Leaderboard } from '../Leaderboard';
 const useStyles = createStyles((theme) => ({
   main: {
@@ -78,36 +82,43 @@ type Props = {
 };
 
 const Profile: React.FC = (props: Props) => {
-  const { user } = useAuth();
   const { classes } = useStyles();
   const [rank, setRank] = useState<Rank>(initialRank);
+  const [user, setUser] = useState<User>(initialUser);
   const [results, setResults] = useState<Result[]>([]);
   const [activeReplay, setActiveReplay] = useState<string | null>(null);
 
+  const { id } = useParams();
+  const { getUser } = useUserMiddleware();
   useEffect(() => {
     (async () => {
       try {
-        if (user.id) {
-          const userRank = await getRankByUserId(user.id);
+        if (id) {
+          const userData = await getUser(id);
+          if (userData) {
+            setUser(userData);
+          }
+          const userRank = await getRankByUserId(id);
           setRank(userRank);
-          const userResults = await getResultsByUserId(user.id);
+          const userResults = await getResultsByUserId(id);
           setResults(userResults);
         }
       } catch (error) {
         console.error(error);
       }
     })();
-  }, [user.id]);
+  }, [id]);
 
   const handleModalOpen = (replayId: string) => {
     setActiveReplay(replayId);
   };
+
   const ths = (
     <tr>
-      <th>Rank</th>
-      <th>Name</th>
-      <th>Wins</th>
-      <th>Losses</th>
+      <th>Num</th>
+      <th>Player X</th>
+      <th>Player O</th>
+      <th>Winner</th>
     </tr>
   );
 
@@ -154,15 +165,6 @@ const Profile: React.FC = (props: Props) => {
             //error={errors.email}
             disabled
             p={8}
-          />
-          <PasswordInput
-            name="password"
-            value={''}
-            label="Password"
-            // onChange={handleChange}
-            //error={errors.password}
-            p={8}
-            disabled
           />
         </Paper>
         <Stack style={{ width: '45%' }}>

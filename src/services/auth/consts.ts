@@ -1,7 +1,7 @@
 import { LoginForm } from './types';
 
 export const initialLoginForm: LoginForm = {
-  username: '',
+  name: '',
   password: '',
   email: '',
 };
