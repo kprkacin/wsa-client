@@ -15,11 +15,14 @@ export const updateUser = async (
   id: string,
   newUser: UserUpdateForm,
 ): Promise<User> => {
-  const resp = await createApiCall({
-    url: `/user/${id}`,
-    method: 'PUT',
-    data: transformToUserRequest(newUser),
-  })();
+  const resp = await createApiCall(
+    {
+      url: `/user/${id}`,
+      method: 'PUT',
+      data: transformToUserRequest(newUser),
+    },
+    { success: 'User updated successfully' },
+  )();
 
   return transformUser(resp.data);
 };
