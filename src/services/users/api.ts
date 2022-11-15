@@ -1,5 +1,6 @@
 import { createApiCall } from '../api/api';
-import { transformUser, transformUsers, User } from '../users';
+import { transformUser, User, UserUpdateForm } from '../users';
+import { transformToUserRequest } from './transformations';
 
 export const getUserById = async (id: string): Promise<User> => {
   const resp = await createApiCall({
@@ -9,6 +10,20 @@ export const getUserById = async (id: string): Promise<User> => {
 
   return transformUser(resp.data);
 };
+
+export const updateUser = async (
+  id: string,
+  newUser: UserUpdateForm,
+): Promise<User> => {
+  const resp = await createApiCall({
+    url: `/user/${id}`,
+    method: 'PUT',
+    data: transformToUserRequest(newUser),
+  })();
+
+  return transformUser(resp.data);
+};
+
 export const getUsers = async (): Promise<User[]> => {
   const resp = await createApiCall({
     url: `/users`,

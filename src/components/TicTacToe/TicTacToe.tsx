@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-key */
 import React, { useState, useEffect } from 'react';
-import { ActionIcon, Box, Grid } from '@mantine/core';
+import { ActionIcon, Badge, Box, Button, Grid, Group } from '@mantine/core';
 import { PlayerStates, Square, SquareSymbol } from './types';
 import { IconCircle, IconX } from '@tabler/icons';
 import { replacePropertyInArray } from '../../services/helpers';
@@ -24,9 +24,6 @@ const TicTacToe: React.FC = (props: Props) => {
   );
 
   const { socket } = useSocket();
-  console.log('what');
-
-  console.log(activeSymbol);
 
   useEffect(() => {
     socket.on('connect', () => {
@@ -112,24 +109,71 @@ const TicTacToe: React.FC = (props: Props) => {
     });
   };
 
+  const renderBadge = () => {
+    switch (true) {
+      case activeSymbol === result: {
+        return (
+          <Badge size="xl" p={25} color="green">
+            Congratulations
+          </Badge>
+        );
+      }
+      case result !== null: {
+        return (
+          <Badge size="xl" p={25} color="red">
+            Better luck next time
+          </Badge>
+        );
+      }
+      case activeTurn: {
+        return (
+          <Badge size="xl" p={25} color="green">
+            Your turn
+          </Badge>
+        );
+      }
+      default: {
+        return (
+          <Badge size="xl" p={25} color="red">
+            Opponents' turn
+          </Badge>
+        );
+      }
+    }
+  };
+
   return (
     <>
-      <h1>
-        {result
-          ? activeSymbol === result
-            ? 'Congrats!'
-            : 'Better luck next time!'
-          : activeTurn
-          ? 'YOUR TURN'
-          : 'OPPONENTS TURN'}
-      </h1>
-      <h2>{playerState}</h2>
-      <button onClick={handleQueClicked}>Que</button>
+      <Group
+        align="center"
+        style={{
+          justifyContent: 'space-between',
+          paddingRight: '10%',
+          paddingLeft: '10%',
+          margin: '3rem',
+        }}
+      >
+        <Box>{activeSymbol && renderBadge()}</Box>
+        <Button
+          size="xl"
+          variant="outline"
+          color="grape"
+          disabled={
+            playerState === PlayerStates.IN_GAME ||
+            playerState === PlayerStates.QUEUED
+          }
+          onClick={handleQueClicked}
+        >
+          Queue
+        </Button>
+      </Group>
+
       <Grid
+        grow
         sx={(theme) => ({
-          width: '50%',
           margin: 'auto',
           opacity: activeTurn ? 1 : 0.8,
+          width: '850px',
           pointerEvents: activeTurn ? 'all' : 'none',
         })}
       >
@@ -138,8 +182,24 @@ const TicTacToe: React.FC = (props: Props) => {
             <Grid.Col span={4} key={index}>
               <ActionIcon
                 sx={(theme) => ({
-                  border: 0,
+                  backgroundColor: box.symbol
+                    ? box.symbol === SquareSymbol.O
+                      ? theme.colors.grape
+                      : theme.colors.grape
+                    : theme.colors.grape[5],
+                  borderRadius: '1rem',
                   pointerEvents: box.symbol && 'none',
+                  transition: 'background-color 0.3s',
+                  svg: {
+                    opacity: box.symbol ? 1 : 0,
+                    color: 'white',
+                  },
+                  '&:hover': {
+                    backgroundColor: theme.colors.grape,
+                    svg: {
+                      opacity: 0.4,
+                    },
+                  },
                 })}
                 variant="default"
                 size={264}
@@ -147,7 +207,17 @@ const TicTacToe: React.FC = (props: Props) => {
                   handleSquareClick(box, index);
                 }}
               >
-                <RotateBox symbol={box.symbol} />
+                {box.symbol ? (
+                  box.symbol === SquareSymbol.O ? (
+                    <IconCircle size={128} />
+                  ) : (
+                    <IconX size={128} />
+                  )
+                ) : activeSymbol === SquareSymbol.O ? (
+                  <IconCircle size={128} />
+                ) : (
+                  <IconX size={128} />
+                )}
               </ActionIcon>
             </Grid.Col>
           );

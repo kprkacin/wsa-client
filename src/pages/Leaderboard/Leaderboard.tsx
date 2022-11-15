@@ -54,15 +54,20 @@ const useStyles = createStyles((theme) => ({
   },
   table: {
     width: '100%',
-    padding: '3rem 5rem 3rem 5rem',
-    borderRadius: '32px',
+    borderRadius: '16px',
     marginTop: '2rem',
-    backgroundColor: 'white',
+    //backgroundColor: 'white',
     border: 0,
     'tbody tr td': {
-      borderBottom: 0,
-      padding: '1rem 0rem',
+      border: 0,
+      padding: '1rem 0.5rem',
     },
+    'thead tr th': {
+      textAlign: 'center',
+    },
+
+    borderCollapse: 'separate',
+    borderSpacing: '0 1em',
   },
 }));
 
@@ -97,36 +102,17 @@ const Leaderboard: React.FC<Props> = (props: Props) => {
     </tr>
   );
 
-  const rows = ranks.slice(3).map((element, index) => (
-    <tr key={index}>
-      <LeaderboardRow rank={element} index={index + 3} />
-    </tr>
-  ));
+  const rows = ranks
+    .slice(3)
+    .map((element, index) => (
+      <LeaderboardRow rank={element} key={index} index={index + 3} />
+    ));
   return (
     <>
       <Group className={classes.group}>
-        <Group style={{ minWidth: '60%' }}>
-          <CardAvatar rank={ranks[0]} index={0} />
-          <CardAvatar rank={ranks[1]} index={1} />
-          <CardAvatar rank={ranks[2]} index={2} />
-        </Group>
-        <Stack className={classes.stack}>
-          <Title>Your Stats</Title>
-          <Group>
-            <Box className={classes.boxWin}>
-              <Text color={'white'}>Wins</Text>
-              <Text size={96} color={'white'}>
-                10
-              </Text>
-            </Box>
-            <Box className={classes.boxLoss}>
-              <Text color={'white'}>Losses</Text>
-              <Text size={96} color={'white'}>
-                10
-              </Text>
-            </Box>
-          </Group>
-        </Stack>
+        <CardAvatar rank={ranks[0]} index={0} />
+        <CardAvatar rank={ranks[1]} index={1} />
+        <CardAvatar rank={ranks[2]} index={2} />
       </Group>
 
       <Table className={classes.table} highlightOnHover>

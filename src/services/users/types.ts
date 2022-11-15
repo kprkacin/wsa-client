@@ -5,6 +5,7 @@ export interface User {
   name: string | null;
   email: string | null;
   token: string | null;
+  avatarId?: number;
 }
 
 export interface ProviderProps {
@@ -13,4 +14,10 @@ export interface ProviderProps {
 
 export interface UserKV {
   [id: string]: User;
+}
+
+export interface UserUpdateForm {
+  name: string;
+  email: string;
+  password: string;
 }

@@ -1,4 +1,4 @@
-import { createStyles, Paper, Text } from '@mantine/core';
+import { createStyles, Group, Paper, Text } from '@mantine/core';
 import { Avatar } from '../Avatar';
 import React, { useEffect, useState } from 'react';
 import { User } from '../../services/users';
@@ -6,11 +6,13 @@ import { useUserMiddleware } from '../../services/users/useUserMiddleware';
 
 const useStyles = createStyles((theme) => ({
   main: {
-    backgroundColor: ' rgba( 255, 255, 255, 0.1 )',
-    boxShadow: '0 8px 32px 0 rgba( 31, 38, 135, 0.37 )',
+    backgroundColor: ' rgba( 255, 255, 255,1 )',
+    boxShadow: '2.5px 2.5px 5px gray.2 -2.5px -2.5px 5px #ffffff;',
     backdropFilter: 'blur( 4px )',
     borderRadius: '32px',
     border: ' 1px solid rgba( 255, 255, 255, 0.18 )',
+    padding: '1rem 0.5rem',
+    width: '100%',
   },
 }));
 
@@ -39,10 +41,15 @@ const ChatMessage: React.FC<MessageProps> = (props) => {
 
   return (
     <Paper className={classes.main} key={'e'}>
-      <Avatar color={'cyan'} size={'lg'}>
-        {messageUser?.name}
-      </Avatar>
-      <Text ml={20} color="black">
+      <Group>
+        <Avatar
+          color={'cyan'}
+          size={'lg'}
+          avatarId={messageUser?.avatarId}
+        ></Avatar>
+        <Text color={'cyan'}>{messageUser?.name}</Text>
+      </Group>
+      <Text color="black" align="start" ml={'25%'}>
         {message}
       </Text>
     </Paper>

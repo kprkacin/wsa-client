@@ -1,4 +1,13 @@
-import { Button, createStyles, Paper, Text, Title } from '@mantine/core';
+import {
+  Button,
+  createStyles,
+  Group,
+  Paper,
+  Stack,
+  Text,
+  Textarea,
+  Title,
+} from '@mantine/core';
 import React, { useEffect, useState } from 'react';
 import { TicTacToe } from '../../components';
 import { Avatar } from '../../components/Avatar';
@@ -7,15 +16,7 @@ import { TextInput } from '../../components/Input';
 import { useAuth } from '../../services/auth/AuthProvider';
 import { useSocket } from '../../services/socket/SocketProvider';
 
-const useStyles = createStyles((theme) => ({
-  main: {
-    backgroundColor: ' rgba( 255, 255, 255, 0.1 )',
-    boxShadow: '0 8px 32px 0 rgba( 31, 38, 135, 0.37 )',
-    backdropFilter: 'blur( 4px )',
-    borderRadius: '32px',
-    border: ' 1px solid rgba( 255, 255, 255, 0.18 )',
-  },
-}));
+const useStyles = createStyles((theme) => ({}));
 
 type Props = {
   //
@@ -45,91 +46,38 @@ const Chat: React.FC = (props: Props) => {
 
   console.log(messages);
   return (
-    <Paper shadow="xs" radius="xl" p="md" className={classes.main}>
-      <Title>Lobby</Title>
-      {messages.map(({ data }, idx) => (
-        <ChatMessage key={idx} message={data.message} id={data.id} />
-      ))}
-
-      <TextInput onChange={(e) => setMessage(e.target.value)} />
-      <Button onClick={sendMessage}>Send</Button>
+    <Paper p="md" style={{ backgroundColor: 'transparent', height: '100vh' }}>
+      <Stack justify={'space-between'} style={{ height: '100vh' }}>
+        <Stack>
+          <Title weight="700" size="h1" color="gray.6" transform="uppercase">
+            Lobby
+          </Title>
+          {messages.map(({ data }, idx) => (
+            <ChatMessage key={idx} message={data.message} id={data.id} />
+          ))}
+        </Stack>
+        <Group
+          style={{ marginBottom: '3rem', width: '100% ', marginTop: '3rem' }}
+        >
+          <Textarea
+            placeholder="Enter message"
+            radius="lg"
+            style={{ width: '70%' }}
+            onChange={(e) => setMessage(e.target.value)}
+          />
+          <Button
+            color="grape"
+            variant="outline"
+            radius="md"
+            style={{ width: '25%' }}
+            onClick={sendMessage}
+          >
+            Send
+          </Button>
+        </Group>
+      </Stack>
     </Paper>
   );
 };
 
 export default Chat;
-
-{
-  /* 
-
-  <Box
-        sx={(theme) => ({
-          display: 'flex',
-          justifyContent: 'space-between',
-        })}
-      >
-        <Box
-          sx={(theme) => ({
-            width: '30%',
-            height: '200px',
-            backgroundColor: 'rgba( 247, 240, 240, 0.1 )',
-            boxShadow: '0 8px 32px 0 rgba( 31, 38, 135, 0.37 )',
-            backdropFilter: 'blur( 5.5px )',
-            border: '1px solid rgba( 255, 255, 255, 0.18 )',
-          })}
-        >
-          <Box
-            sx={(theme) => ({
-              margin: '10px',
-              backgroundColor: 'white',
-              borderRadius: '5px',
-              display: 'flex',
-              alignContent: 'center',
-              alignItems: 'center',
-            })}
-          >
-            <Avatar color={'cyan'} size={'lg'}>
-              T
-            </Avatar>
-            <Text ml={20} color="black">
-              This is a another message{' '}
-            </Text>
-          </Box>
-          <Box
-            sx={(theme) => ({
-              margin: '10px',
-              backgroundColor: 'green',
-              borderRadius: '5px',
-              display: 'flex',
-              alignContent: 'center',
-              alignItems: 'center',
-            })}
-          >
-            <Avatar color={'blue'} size={'lg'}>
-              T
-            </Avatar>
-            <Text ml={20} color="black">
-              This is a user message{' '}
-            </Text>
-          </Box>
-          <Box
-            sx={(theme) => ({
-              margin: '10px',
-              backgroundColor: 'white',
-              borderRadius: '5px',
-              display: 'flex',
-              alignContent: 'center',
-              alignItems: 'center',
-            })}
-          >
-            <Avatar color={'cyan'} size={'lg'}>
-              T
-            </Avatar>
-            <Text ml={20} color="black">
-              This is a message{' '}
-            </Text>
-          </Box>
-        </Box>
-      </Box>
-*/
-}

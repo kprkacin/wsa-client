@@ -34,10 +34,21 @@ interface Props {
 const AuthForm: React.FC<Props> = (props) => {
   const { authType, form, errors, handleChange, handleAction } = props;
 
+  const text = () => {
+    switch (authType) {
+      case AuthActionTypes.SIGN_IN:
+        return 'Sign In';
+      case AuthActionTypes.AS_GUEST:
+        return 'Continue as Guest';
+      default:
+        return 'Sign Up';
+    }
+  };
+
   return (
-    <Paper className="box" p={16}>
+    <Paper radius={'xl'} className="box" p={16}>
       <Title order={1} align="center" color="gray.8">
-        Register
+        {text()}
       </Title>
 
       {authType !== AuthActionTypes.SIGN_IN && (

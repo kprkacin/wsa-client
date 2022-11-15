@@ -1,6 +1,6 @@
 /* eslint-disable no-case-declarations */
-import { useState } from 'react';
-import { Box, Button, createStyles } from '@mantine/core';
+import { useEffect, useState } from 'react';
+import { Box, Button, createStyles, Stack } from '@mantine/core';
 import React from 'react';
 import { Drawer } from '@mantine/core';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -66,6 +66,11 @@ const LoginPage: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    setError({});
+    setLoginForm(initialLoginForm);
+  }, [authType]);
+
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError({});
     setLoginForm({ ...loginForm, [e.target.name]: e.target.value });
@@ -91,39 +96,52 @@ const LoginPage: React.FC = () => {
           handleAction={handleLoginClicked}
         />
       </Drawer>
-      <Button
-        variant="light"
-        color="violet"
-        size="xl"
-        uppercase
-        onClick={() => {
-          setAuthType(AuthActionTypes.AS_GUEST);
+      <Stack
+        style={{
+          maxWidth: '300px',
+          position: 'absolute',
+          left: '50%',
+          top: '50%',
+          transform: 'translate(-50%,-50%)',
         }}
       >
-        Play as Guest
-      </Button>
-      <Button
-        variant="light"
-        color="violet"
-        size="xl"
-        uppercase
-        onClick={() => {
-          setAuthType(AuthActionTypes.SIGN_UP);
-        }}
-      >
-        Sign Up
-      </Button>
-      <Button
-        variant="light"
-        color="violet"
-        size="xl"
-        uppercase
-        onClick={() => {
-          setAuthType(AuthActionTypes.SIGN_IN);
-        }}
-      >
-        Sign In
-      </Button>
+        <Button
+          variant="light"
+          color="grape"
+          size="xl"
+          radius="lg"
+          uppercase
+          onClick={() => {
+            setAuthType(AuthActionTypes.AS_GUEST);
+          }}
+        >
+          Play as Guest
+        </Button>
+        <Button
+          variant="light"
+          color="grape"
+          size="xl"
+          radius="lg"
+          uppercase
+          onClick={() => {
+            setAuthType(AuthActionTypes.SIGN_UP);
+          }}
+        >
+          Sign Up
+        </Button>
+        <Button
+          variant="light"
+          color="grape"
+          size="xl"
+          radius="lg"
+          uppercase
+          onClick={() => {
+            setAuthType(AuthActionTypes.SIGN_IN);
+          }}
+        >
+          Sign In
+        </Button>
+      </Stack>
 
       {Array(250)
         .fill(0)

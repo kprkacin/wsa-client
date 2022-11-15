@@ -3,6 +3,7 @@ import {
   createStyles,
   Group,
   Paper,
+  RingProgress,
   Stack,
   Table,
   Text,
@@ -30,29 +31,41 @@ const useStyles = createStyles((theme) => ({
     backdropFilter: 'blur( 4px )',
     borderRadius: '32px',
     border: ' 1px solid rgba( 255, 255, 255, 0.18 )',
-    width: '45%',
+    width: '100%',
   },
   side: {
-    backgroundColor: ' rgba( 255, 255, 255,0.7 )',
-    boxShadow: '2.5px 2.5px 5px gray.2 -2.5px -2.5px 5px #ffffff;',
-    backdropFilter: 'blur( 4px )',
-    borderRadius: '32px',
-    border: ' 1px solid rgba( 255, 255, 255, 0.18 )',
     width: '100%',
-    maxHeight: '45vh',
+    minHeight: '40vh',
     overflow: 'auto',
+    backgroundColor: 'transparent',
+  },
+  side2: {
+    width: '100%',
+    minHeight: '30vh',
+    overflow: 'hidden',
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
+  },
+  sideMain: {
+    position: 'absolute',
+    top: '0',
+    right: '0',
+    height: '100vh',
+    backgroundColor: 'rgba( 255, 255, 255,0.7) !important',
   },
   table: {
     width: '100%',
-    padding: '3rem 5rem 3rem 5rem',
     borderRadius: '16px',
     marginTop: '2rem',
     //backgroundColor: 'white',
     border: 0,
     'tbody tr td': {
-      borderBottom: 0,
-      padding: '1rem 0rem',
+      border: 0,
+      padding: '1rem 0.5rem',
     },
+
+    borderCollapse: 'separate',
+    borderSpacing: '0 1em',
   },
 
   stack: {
@@ -64,16 +77,20 @@ const useStyles = createStyles((theme) => ({
     justifyContent: 'space-between',
   },
   boxWin: {
-    minWidth: '200px',
+    minWidth: '35%',
     padding: '3rem 5rem 3rem 5rem',
     borderRadius: '32px',
     backgroundColor: theme.colors.green[3],
   },
   boxLoss: {
-    minWidth: '200px',
+    minWidth: '35%',
     padding: '3rem 5rem 3rem 5rem',
     borderRadius: '32px',
     backgroundColor: theme.colors.red[3],
+  },
+  playedNum: {
+    color: theme.colors.grape,
+    fontSize: '10rem',
   },
 }));
 
@@ -115,21 +132,20 @@ const Profile: React.FC = (props: Props) => {
 
   const ths = (
     <tr>
-      <th>Num</th>
       <th>Player X</th>
       <th>Player O</th>
       <th>Winner</th>
+      <th></th>
     </tr>
   );
 
   const rows = results.map((element, index) => (
-    <tr key={index}>
-      <LastPlayedRow
-        result={element}
-        index={index}
-        setActiveReplay={handleModalOpen}
-      />
-    </tr>
+    <LastPlayedRow
+      result={element}
+      profileId={user.id || ''}
+      key={index}
+      setActiveReplay={handleModalOpen}
+    />
   ));
 
   return (
@@ -138,39 +154,54 @@ const Profile: React.FC = (props: Props) => {
         sx={{
           display: 'flex',
           justifyContent: 'space-between',
-          padding: '35px',
+          paddingLeft: '35px',
         }}
       >
-        <Paper shadow="xs" radius="xl" p="md" className={classes.main}>
-          <Avatar m="auto" size={256}>
-            {user?.name?.[0].toUpperCase()}
-          </Avatar>
+        <Stack style={{ width: '60%' }}>
+          <Paper shadow="xs" radius="xl" p="md" className={classes.main}>
+            <Avatar avatarId={user.avatarId} m="auto" size={256}>
+              {user?.name?.[0].toUpperCase()}
+            </Avatar>
 
-          <TextInput
-            label="Name"
-            value={user.name || ''}
-            name="username"
-            //onChange={handleChange}
-            //error={errors.username}
-            disabled
-            p={8}
-          />
+            <TextInput
+              label="Name"
+              value={user.name || ''}
+              name="username"
+              disabled
+              p={8}
+            />
 
-          <TextInput
-            label="Email"
-            value={user.email || ''}
-            name="email"
-            icon={<IconAt />}
-            // onChange={handleChange}
-            //error={errors.email}
-            disabled
-            p={8}
-          />
-        </Paper>
-        <Stack style={{ width: '45%' }}>
-          <Paper shadow="xs" radius="xl" p="md" className={classes.side}>
+            <TextInput
+              label="Email"
+              value={user.email || ''}
+              name="email"
+              icon={<IconAt />}
+              disabled
+              p={8}
+            />
+          </Paper>
+          <Paper p="md" className={classes.side}>
+            <Title weight="700" size="h1" color="gray.6" transform="uppercase">
+              Latest Games
+            </Title>
+            <Table className={classes.table} highlightOnHover>
+              <thead>{ths}</thead>
+              <tbody>{rows}</tbody>
+            </Table>
+          </Paper>
+        </Stack>
+
+        <Stack style={{ width: '35%' }} className={classes.sideMain}>
+          <Paper p="md" className={classes.side}>
             <Stack className={classes.stack}>
-              <Title>Your Stats</Title>
+              <Title
+                weight="700"
+                size="h1"
+                color="gray.6"
+                transform="uppercase"
+              >
+                Your Stats
+              </Title>
               <Group className={classes.groups}>
                 <Box className={classes.boxWin}>
                   <Text color={'white'}>Wins</Text>
@@ -187,12 +218,27 @@ const Profile: React.FC = (props: Props) => {
               </Group>
             </Stack>
           </Paper>
-          <Paper shadow="xs" radius="xl" p="md" className={classes.side}>
-            <Title>Latest Games</Title>
-            <Table className={classes.table} highlightOnHover>
-              <thead>{ths}</thead>
-              <tbody>{rows}</tbody>
-            </Table>
+          <Paper p="md" className={classes.side2}>
+            <Text>Within the 90th percentile of players!</Text>
+            <RingProgress
+              label={
+                <Text color="grape" weight={700} align="center" size="xl">
+                  90th percentile!
+                </Text>
+              }
+              size={200}
+              thickness={26}
+              sections={[{ value: 90, color: 'grape' }]}
+              style={{ margin: 'auto' }}
+            />
+          </Paper>
+          <Paper p="md" className={classes.side2}>
+            <Title weight="700" size="h1" color="gray.6" transform="uppercase">
+              Number of games played
+            </Title>
+            <Title className={classes.playedNum}>
+              {rank.wins + rank.losses}
+            </Title>
           </Paper>
         </Stack>
       </Box>

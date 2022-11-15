@@ -5,6 +5,7 @@ import {
   Group,
   Navbar,
   NavLink as MNavLink,
+  NavLinkProps,
 } from '@mantine/core';
 import { ThemeToggle } from '../ThemeToggle';
 import { Link, useLocation } from 'react-router-dom';
@@ -15,14 +16,14 @@ const useStyles = (label?: string) =>
     },
   }));
 
-type Props = {
+type Props = NavLinkProps & {
   to: string;
   icon?: ReactElement;
   label?: string;
 };
 
 const NavLink: React.FC<Props> = (props) => {
-  const { to, icon, label } = props;
+  const { to, icon, label, ...otherProps } = props;
   const location = useLocation();
   const { classes } = useStyles(label)();
 
@@ -42,6 +43,9 @@ const NavLink: React.FC<Props> = (props) => {
       classNames={{
         body: classes.body,
       }}
+      variant="subtle"
+      color="violet"
+      {...otherProps}
     />
   );
 };

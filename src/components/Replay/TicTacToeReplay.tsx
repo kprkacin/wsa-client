@@ -62,14 +62,28 @@ const TicTacToeReplay: React.FC<Props> = (props) => {
             <Grid.Col span={4} key={index}>
               <ActionIcon
                 sx={(theme) => ({
-                  border: 0,
-                  pointerEvents: box.symbol && 'none',
+                  backgroundColor: box.symbol
+                    ? box.symbol === SquareSymbol.O
+                      ? theme.colors.grape
+                      : theme.colors.grape
+                    : theme.colors.grape[5],
+                  borderRadius: '1rem',
+                  pointerEvents: 'none',
+                  transition: 'background-color 0.3s',
+                  svg: {
+                    opacity: box.symbol ? 1 : 0,
+                    color: 'white',
+                  },
                 })}
                 variant="default"
                 size={264}
-                disabled
               >
-                <RotateBox symbol={box.symbol} />
+                {box.symbol &&
+                  (box.symbol === SquareSymbol.O ? (
+                    <IconCircle size={128} />
+                  ) : (
+                    <IconX size={128} />
+                  ))}
               </ActionIcon>
             </Grid.Col>
           );

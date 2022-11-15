@@ -1,6 +1,13 @@
 import React from 'react';
-import { Avatar as MAvatar, AvatarProps, TextInputProps } from '@mantine/core';
+import {
+  Avatar as MAvatar,
+  AvatarProps,
+  Image,
+  TextInputProps,
+} from '@mantine/core';
 import { createStyles } from '@mantine/core';
+import { useAuth } from '../../services/auth/AuthProvider';
+import { IconUser } from '@tabler/icons';
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -9,11 +16,11 @@ const useStyles = createStyles((theme) => ({
 }));
 
 type Props = AvatarProps & {
-  children: React.ReactNode;
+  avatarId?: number;
 };
 
 const Avatar: React.FC<Props> = (props) => {
-  const { children, ...otherInputProps } = props;
+  const { avatarId, ...otherInputProps } = props;
 
   const { classes } = useStyles();
 
@@ -22,9 +29,14 @@ const Avatar: React.FC<Props> = (props) => {
       classNames={{
         root: classes.root,
       }}
+      radius="xl"
       {...otherInputProps}
     >
-      {children}
+      {avatarId ? (
+        <Image src={`avatars/${avatarId}.png`} alt="Avatar image" />
+      ) : (
+        <IconUser />
+      )}
     </MAvatar>
   );
 };

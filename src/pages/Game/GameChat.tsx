@@ -1,20 +1,21 @@
-import { Button, createStyles, Paper, Text, Title } from '@mantine/core';
+import {
+  Box,
+  Button,
+  createStyles,
+  Paper,
+  Stack,
+  Text,
+  Title,
+} from '@mantine/core';
 import React, { useEffect, useState } from 'react';
 import { TicTacToe } from '../../components';
 import { Avatar } from '../../components/Avatar';
+import { ChatMessage } from '../../components/Chat';
 import { TextInput } from '../../components/Input';
 import { useAuth } from '../../services/auth/AuthProvider';
 import { useSocket } from '../../services/socket/SocketProvider';
 
-const useStyles = createStyles((theme) => ({
-  main: {
-    backgroundColor: ' rgba( 255, 255, 255, 0.1 )',
-    boxShadow: '0 8px 32px 0 rgba( 31, 38, 135, 0.37 )',
-    backdropFilter: 'blur( 4px )',
-    borderRadius: '32px',
-    border: ' 1px solid rgba( 255, 255, 255, 0.18 )',
-  },
-}));
+const useStyles = createStyles((theme) => ({}));
 
 type Props = {
   //
@@ -44,21 +45,28 @@ const GameChat: React.FC = (props: Props) => {
 
   console.log(messages);
   return (
-    <Paper shadow="xs" radius="xl" p="md" className={classes.main}>
-      <Title>Chat</Title>
-      {messages.map(({ data }) => (
-        <Paper className={classes.main} key={'e'}>
-          <Avatar color={'cyan'} size={'lg'}>
-            {data?.id}
-          </Avatar>
-          <Text ml={20} color="black">
-            {data?.message}
-          </Text>
-        </Paper>
-      ))}
+    <Paper p="md" style={{ backgroundColor: 'transparent', height: '100vh' }}>
+      <Stack style={{ width: '100%', height: '100vh' }} justify="space-between">
+        <Stack>
+          <Title weight="700" size="h1" color="gray.6" transform="uppercase">
+            Chat
+          </Title>
 
-      <TextInput onChange={(e) => setMessage(e.target.value)} />
-      <Button onClick={sendMessage}>Send</Button>
+          {messages.map(({ data }) => (
+            <ChatMessage id={data.id} message={data.message} key={data.id} />
+          ))}
+        </Stack>
+
+        <Stack style={{ marginBottom: '3rem' }}>
+          <TextInput
+            label="Message"
+            onChange={(e) => setMessage(e.target.value)}
+          />
+          <Button variant="outline" color="grape" onClick={sendMessage}>
+            Send
+          </Button>
+        </Stack>
+      </Stack>
     </Paper>
   );
 };

@@ -14,23 +14,25 @@ import { Result } from '../../services/results';
 import { useNavigate } from 'react-router-dom';
 
 const useStyles = createStyles((theme) => ({
-  main: {
-    backgroundColor: ' rgba( 255, 255, 255, 0.1 )',
-    boxShadow: '0 8px 32px 0 rgba( 31, 38, 135, 0.37 )',
-    backdropFilter: 'blur( 4px )',
-    borderRadius: '32px',
+  first: {
+    borderRadius: '20px 0 0 20px',
+    border: ' 1px solid rgba( 255, 255, 255, 0.18 )',
+  },
+  last: {
+    borderRadius: '0 20px 20px 0',
+
     border: ' 1px solid rgba( 255, 255, 255, 0.18 )',
   },
 }));
 
 interface MessageProps {
-  index: number;
   result: Result;
+  profileId: string;
   setActiveReplay: (resultId: string) => void;
 }
 
 const LastPlayedRow: React.FC<MessageProps> = (props) => {
-  const { result, index, setActiveReplay } = props;
+  const { result, profileId, setActiveReplay } = props;
 
   const [userX, setUserX] = useState<User | null>(null);
   const [userO, setUserO] = useState<User | null>(null);
@@ -39,6 +41,7 @@ const LastPlayedRow: React.FC<MessageProps> = (props) => {
   const { getUser } = useUserMiddleware();
   const navigate = useNavigate();
 
+  console.log(winner, profileId);
   useEffect(() => {
     (async () => {
       try {
@@ -61,12 +64,16 @@ const LastPlayedRow: React.FC<MessageProps> = (props) => {
   };
 
   return (
-    <>
-      <td>{index + 1}</td>
-      <td>
+    <tr
+      style={{
+        backgroundColor: `${winner?.id === profileId ? '#8CE99A' : '#FFA8A8'}`,
+        marginBottom: '10px',
+      }}
+    >
+      <td className={classes.first}>
         <Group>
           <UnstyledButton onClick={() => navigateToUserPage(userX?.id)}>
-            <Avatar>{userX?.name?.[0]}</Avatar>
+            <Avatar avatarId={userX?.avatarId}>{userX?.name?.[0]}</Avatar>
           </UnstyledButton>
           {userX?.name}
         </Group>
@@ -74,21 +81,27 @@ const LastPlayedRow: React.FC<MessageProps> = (props) => {
       <td>
         <Group>
           <UnstyledButton onClick={() => navigateToUserPage(userO?.id)}>
-            <Avatar>{userO?.name?.[0]}</Avatar>
+            <Avatar avatarId={userO?.avatarId}>{userO?.name?.[0]}</Avatar>
           </UnstyledButton>
           {userO?.name}
         </Group>
       </td>
       <td>
         <Group>
-          <Avatar>{winner?.name?.[0]}</Avatar>
+          <Avatar avatarId={winner?.avatarId}>{winner?.name?.[0]}</Avatar>
           {winner?.name}
         </Group>
       </td>
-      <td>
-        <Button onClick={() => setActiveReplay(result.id)}>Replay</Button>
+      <td className={classes.last}>
+        <Button
+          color="grape"
+          variant="subtle"
+          onClick={() => setActiveReplay(result.id)}
+        >
+          Replay
+        </Button>
       </td>
-    </>
+    </tr>
   );
 };
 

@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { initialUser, User } from '../users';
 import { clearAccessToken, setAccessToken } from './helpers';
 import { AuthProviderProps } from './types';
@@ -22,8 +22,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [activeUser, setActiveUser] = useState<User>(initialUser);
 
   const logIn = useCallback((user: User, callback: () => void) => {
-    console.log('logging');
-    setActiveUser(user);
+    setActiveUser({
+      ...user,
+      avatarId: Math.floor(Math.random() * (10 - 1) + 1),
+    });
+
     if (user.token) {
       setAccessToken(user.token);
     }

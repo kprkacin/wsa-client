@@ -8,6 +8,7 @@ import React, {
 import { ProviderProps, User, UserKV } from './types';
 import { getUserById, getUsers } from './api';
 import { initialUser } from './consts';
+import { useAuth } from '../auth/AuthProvider';
 
 interface UserMiddlewareContext {
   users: UserKV;
@@ -28,13 +29,18 @@ export const UserMiddlewareProvider: React.FC<ProviderProps> = ({
 }) => {
   const [users, setUsers] = useState<UserKV>({});
 
+  const { user: activeUser } = useAuth();
+
   useEffect(() => {
     (async () => {
       try {
         const usersData = await getUsers();
         const formatted = usersData.reduce((acc, user) => {
           if (user.id) {
-            acc[user.id] = user;
+            acc[user.id] = {
+              ...user,
+              avatarId: Math.floor(Math.random() * (10 - 1) + 1),
+            };
           }
           return acc;
         }, {} as UserKV);
@@ -48,6 +54,10 @@ export const UserMiddlewareProvider: React.FC<ProviderProps> = ({
   const getUser = async (id: string) => {
     if (!id) {
       return null;
+    }
+
+    if (id === activeUser.id) {
+      return activeUser;
     }
     if (users[id]) {
       return users[id];

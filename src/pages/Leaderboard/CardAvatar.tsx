@@ -30,6 +30,7 @@ const useStyles = createStyles((theme) => ({
   button: {
     position: 'relative',
     bottom: 0,
+    width: '50%',
   },
 }));
 
@@ -68,23 +69,27 @@ const CardAvatar: React.FC<Props> = (props) => {
   return (
     <Card className={classes.card} shadow="sm" p="lg" radius="xl" withBorder>
       <Box>
+        <Title color="grape" mt={15} mb={15}>
+          {index + 1}
+        </Title>
+
         <Card.Section className={classes.section}>
-          <Avatar size="xl">{user?.name?.[0]}</Avatar>
+          <Avatar avatarId={user?.avatarId} size={150}>
+            {user?.name?.[0]}
+          </Avatar>
         </Card.Section>
 
         <Text mt={15} weight={500}>
           {user?.name}
         </Text>
-
-        <Title mt={15}>{index + 1}</Title>
       </Box>
 
       <Button
-        variant="light"
-        color="blue"
-        fullWidth
+        variant="subtle"
         mt="md"
-        radius="md"
+        mx="auto"
+        radius="lg"
+        color="grape"
         onClick={() => navigateToUserPage(user?.id)}
         className={classes.button}
       >

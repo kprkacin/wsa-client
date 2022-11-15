@@ -20,7 +20,11 @@ export const RequireAuth: React.FC<{ children: React.ReactElement }> = ({
 
           const user = await getCurrentUser();
 
-          setActiveUser({ ...user, token });
+          setActiveUser({
+            ...user,
+            token,
+            avatarId: Math.floor(Math.random() * (10 - 1) + 1),
+          });
         } catch (error) {
           clearAccessToken();
           return <Navigate to="/login" state={{ from: location }} replace />;

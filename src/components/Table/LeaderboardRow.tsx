@@ -15,11 +15,13 @@ import { Rank } from '../../services/ranks';
 import { initialRank } from '../../services/ranks/consts';
 
 const useStyles = createStyles((theme) => ({
-  main: {
-    backgroundColor: ' rgba( 255, 255, 255, 0.1 )',
-    boxShadow: '0 8px 32px 0 rgba( 31, 38, 135, 0.37 )',
-    backdropFilter: 'blur( 4px )',
-    borderRadius: '32px',
+  first: {
+    borderRadius: '20px 0 0 20px',
+    border: ' 1px solid rgba( 255, 255, 255, 0.18 )',
+  },
+  last: {
+    borderRadius: '0 20px 20px 0',
+
     border: ' 1px solid rgba( 255, 255, 255, 0.18 )',
   },
 }));
@@ -55,12 +57,17 @@ const LastPlayedRow: React.FC<MessageProps> = (props) => {
   };
 
   return (
-    <>
-      <td>{index + 1}</td>
+    <tr
+      style={{
+        backgroundColor: 'white',
+        marginBottom: '10px',
+      }}
+    >
+      <td className={classes.first}>{index + 1}</td>
       <td>
         <Group>
           <UnstyledButton onClick={() => navigateToUserPage(user?.id)}>
-            <Avatar>{user?.name?.[0]}</Avatar>
+            <Avatar avatarId={user?.avatarId}>{user?.name?.[0]}</Avatar>
           </UnstyledButton>
           {user?.name}
         </Group>
@@ -68,10 +75,10 @@ const LastPlayedRow: React.FC<MessageProps> = (props) => {
       <td>
         <Text>{rank.wins}</Text>
       </td>
-      <td>
+      <td className={classes.last}>
         <Text>{rank.losses}</Text>
       </td>
-    </>
+    </tr>
   );
 };
 
